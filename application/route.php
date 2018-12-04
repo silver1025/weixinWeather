@@ -12,6 +12,10 @@
 use think\Route;
 
 Route::rule('news/:id','api/news/read');
+Route::rule('city/:city_name','api/city/read');
+Route::rule('weather/:citycode','api/weather/read');
+Route::rule('wx','weixin/weixin/wx');
+Route::rule('oauth','weixin/weixin/oauth');
 
 return [
     '__pattern__' => [

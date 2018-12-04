@@ -82,8 +82,19 @@ pm2.5：%s
                                 <MsgType><![CDATA[%s]]></MsgType>
                                 <Content><![CDATA[%s]]></Content>
                                 </xml>";
-                $info     = sprintf($template, $toUser, $fromUser, $time, $msgType, $weatherinfo);
+                $info = sprintf($template, $toUser, $fromUser, $time, $msgType, $weatherinfo);
                 echo $info;
 			}
 		}
+
+function http_get($url){
+       $ch = curl_init ();
+      curl_setopt ( $ch, CURLOPT_URL, $url );
+      curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );
+      curl_setopt ( $ch, CURLOPT_CUSTOMREQUEST, 'GET' );
+      curl_setopt ( $ch, CURLOPT_TIMEOUT, 60 );
+      $data = curl_exec ( $ch );
+      curl_close ( $ch );
+      return $data;
+    }
 ?>
