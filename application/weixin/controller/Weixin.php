@@ -1,14 +1,59 @@
 <?php
 namespace app\weixin\controller;
-class Weixin{
+
+use think\Controller;
+
+class Weixin extends Controller
+{
+    public function web(){
+        $cityName = '北京';
+        $model = model('City');
+      	$citycode=$model->get_citycode($cityName);
+		$model = model('Weather');
+		$weatherData=$model->get_weather($citycode);
+        $today = json_decode( $weatherData[0]['day0'], true);
+        $time = "10:24";
+		$humidity = "57%";
+		$pmData = "25";
+		$pmQuality = "优";
+		$date = "11月24日星期六";
+		$high = "10";
+		$low = "-3";
+		$nowTemperature = "4";
+		$climate = "晴";
+		$wind = "微风";
+        $time =explode(' ', $weatherData[0]['updatetime'])[1];
+        $humidity = $weatherData[0]['shidu'];
+		$pmData = $weatherData[0]['pm25'];
+		$pmQuality = $weatherData[0]['quality'];
+		$date = $today['date']."日".$today['week'];
+		$high =explode(' ', $today['high'])[1];
+		$low =explode(' ', $today['low'])[1];
+		$nowTemperature = $weatherData[0]['wendu'];
+		$climate = $today['type'];
+		$wind =$today['fl'];
+        $this->assign([
+            'cityname'  => $cityName,
+            'nowTemperature'  => $nowTemperature,
+            'climate'  => $climate,
+            'wind'  => $wind,
+            'humidity'  => $humidity,
+            'low'  => $low,
+            'high'  => $high,
+            'pmData'  => $pmData,
+            'pmQuality'  => $pmQuality,
+            'date'  => $date
+        ]);
+        return $this->fetch('jQueryweather');
+    }
   
-public function oauth(){
-if (isset($_GET['code'])){
-    echo $_GET['code'];
-}else{
-    echo "NO CODE";
-}
-}
+	public function oauth(){
+		if (isset($_GET['code'])){
+    		echo $_GET['code'];
+		}else{
+    		echo "NO CODE";
+		}
+	}
   
 public function wx(){
 //1.获取到微信推送过来post数据（xml格式）
@@ -64,16 +109,31 @@ public function wx(){
                 $fromUser = $postObj->ToUserName;
                 $time     = time();
                 $msgType  =  'text';
-				$time = "10:24";
+				$model = model('City');
+				$citycode=$model->get_citycode($cityName);
+				$model = model('Weather');
+				$weatherData=$model->get_weather($citycode);
+              	$today = json_decode( $weatherData[0]['day0'], true);
+                $time = "10:24";
 				$humidity = "57%";
 				$pmData = "25";
 				$pmQuality = "优";
-				$data = "11月24日星期六";
+				$date = "11月24日星期六";
 				$high = "10";
 				$low = "-3";
 				$nowTemperature = "4";
 				$climate = "晴";
 				$wind = "微风";
+                $time =explode(' ', $weatherData[0]['updatetime'])[1];
+                $humidity = $weatherData[0]['shidu'];
+				$pmData = $weatherData[0]['pm25'];
+				$pmQuality = $weatherData[0]['quality'];
+				$date = $today['date']."日".$today['week'];
+				$high =explode(' ', $today['high'])[1];
+				$low =explode(' ', $today['low'])[1];
+				$nowTemperature = $weatherData[0]['wendu'];
+				$climate = $today['type'];
+				$wind =$today['fl'];
                 $weather  = 
 "%s今日天气：
 日期：%s
@@ -81,12 +141,12 @@ public function wx(){
 湿度：%s
 pm2.5：%s
 空气质量：%s
-温度：%s℃-%s℃
+温度：%s-%s
 实时温度：%s℃
 天气：%s
 风力：%s";
-              	$test = $this->http_get("http://t.weather.sojson.com/api/weather/city/101030100");
-				$weatherinfo = sprintf($weather, $cityName, $data, $time, $humidity, $pmData,
+              	//$test = $this->http_get("http://t.weather.sojson.com/api/weather/city/101030100");
+				$weatherinfo = sprintf($weather, $cityName, $date, $time, $humidity, $pmData,
 								$pmQuality, $low, $high, $nowTemperature, $climate, $wind);  
                 $template = "<xml>
                                 <ToUserName><![CDATA[%s]]></ToUserName>
@@ -95,7 +155,7 @@ pm2.5：%s
                                 <MsgType><![CDATA[%s]]></MsgType>
                                 <Content><![CDATA[%s]]></Content>
                                 </xml>";
-                $info = sprintf($template, $toUser, $fromUser, $time, $msgType, $test);
+                $info = sprintf($template, $toUser, $fromUser, $time, $msgType, $weatherinfo);
                 echo $info;
 			}
 		}	
@@ -176,7 +236,7 @@ public function index()
        {
             "type":"view",
             "name":"今日天气",
-            "url":"http://123.207.170.21/wx/jQueryweather.html"
+            "url":"http://123.207.170.21/weixin/weixin/web"
         },
         {
              "name":"菜单",

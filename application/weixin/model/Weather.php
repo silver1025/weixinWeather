@@ -1,5 +1,5 @@
 <?php
-namespace app\api\model;
+namespace app\weixin\model;
 
 use think\Model;
 use think\Db;

@@ -15,16 +15,17 @@
   </div>
 
   <div data-role="main" class="ui-content" style="text-align:center">
-   <h2 id="city">北京天气</h2>
+   <h2 id="city">{$cityname}天气</h2>
     <div class="ui-grid-a">
       <div class="ui-block-a" style="text-align:left;padding:12px 0px 0px 50px;">
         <span>
-			<font size="25sp">10℃</font>
-			<p>晴</p>
-			<p>微风</p>
-			<p>湿度20%</p>
-			<p>-3℃~12℃</p>
-			<p>空气质量 83 良</p>
+			<font size="25sp">{$nowTemperature}℃</font>
+			<p>{$climate}</p>
+			<p>湿度{$humidity}</p>
+			<p>风力{$wind}</p>
+            <p>{$date}</p>
+			<p>{$low}~{$high}</p>
+			<p>PM2.5 {$pmData} {$pmQuality}</p>
 		</span>
       </div>
       <div class="ui-block-b">

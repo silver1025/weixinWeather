@@ -9,9 +9,7 @@ class Weather extends Controller
     {
       $citycode = input('citycode');
       $model = model('Weather');
-	  $url="http://t.weather.sojson.com/api/weather/city/";
-	  $url = $url.$citycode;
-	  $data =$this-> http_get($url);
+      $data=$model->get_weather($citycode);
       if($data){
       	$code=200;
       }else{
@@ -19,20 +17,9 @@ class Weather extends Controller
       }
       $data= [
       'code'=>$code,
-      'data'=>$data
+      'weatherInfo'=>$data
       ];
       return json($data);
-    }
-  
-	private function http_get($url){
-       $ch = curl_init ();
-      curl_setopt ( $ch, CURLOPT_URL, $url );
-      curl_setopt ( $ch, CURLOPT_RETURNTRANSFER, 1 );
-      curl_setopt ( $ch, CURLOPT_CUSTOMREQUEST, 'GET' );
-      curl_setopt ( $ch, CURLOPT_TIMEOUT, 60 );
-      $data = curl_exec ( $ch );
-      curl_close ( $ch );
-      return $data;
-    }
+      }
 }
 ?>
